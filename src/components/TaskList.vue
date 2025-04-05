@@ -1,30 +1,41 @@
 <template>
   <div>
     <h2 class="text-2xl font-bold mb-4">Task List</h2>
-    <ul>
-      <li v-for="task in tasks" :key="task.id" class="mb-4 p-4 border rounded-lg">
-        <h3 class="text-xl font-semibold">{{ task.title }}</h3>
-        <p class="text-gray-600">{{ task.description }}</p>
-        <div class="mt-2">
-          <button
-            @click="toggleTaskCompletion(task)"
-            :class="[
-              'px-3 py-1 rounded-lg',
-              task.isCompleted ? 'bg-green-500 text-white' : 'bg-yellow-500 text-white',
-            ]"
-            :disabled="task.isCompleted"
-          >
-            {{ task.isCompleted ? 'Is Completed' : 'Mark as completed' }}
-          </button>
-        </div>
+    <div class="grid grid-cols-3 gap-4 mb-4 font-bold">
+      <div>Title</div>
+      <div>Description</div>
+      <div class="flex justify-end">Actions</div>
+    </div>
+    <ul class="list-none space-y-8">
+      <li
+        v-for="task in tasks"
+        :key="task.id"
+        class="p-4 border rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300"
+      >
+        <div class="flex justify-between items-center mb-2">
+          <h3 class="text-xl font-semibold">{{ task.title }}</h3>
+          <p class="text-gray-600">{{ task.description }}</p>
+          <div class="mt-2">
+            <button
+              @click="toggleTaskCompletion(task)"
+              :class="[
+                'px-3 py-1 rounded-lg',
+                task.isCompleted ? 'bg-green-500 text-white' : 'bg-yellow-500 text-white',
+              ]"
+              :disabled="task.isCompleted"
+            >
+              {{ task.isCompleted ? 'Is Completed' : 'Mark as completed' }}
+            </button>
+          </div>
 
-        <div class="mt-2">
-          <button
-            @click="deleteTask(task.id)"
-            :class="['px-3 py-1 rounded-lg', 'bg-yellow-500 text-white']"
-          >
-            Delete
-          </button>
+          <div class="mt-2">
+            <button
+              @click="deleteTaskFromList(task.id)"
+              :class="['px-3 py-1 rounded-lg', 'bg-yellow-500 text-white']"
+            >
+              Delete
+            </button>
+          </div>
         </div>
       </li>
     </ul>
@@ -64,6 +75,12 @@ const toggleTaskCompletion = async (task: {
     console.error(error)
     alert('Failed to update task. Please try again.')
   }
+}
+
+const deleteTaskFromList = async (taskId: string) => {
+  await deleteTask(taskId)
+
+  tasks.value = tasks.value.filter((task) => task.id !== taskId)
 }
 
 onMounted(fetchTasks)

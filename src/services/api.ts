@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { getIpAddress } from './get-ip'
 
-const API_URL = 'http://localhost:3000/api/v1' // Replace with your NestJS API URL
+const API_URL = import.meta.env.VITE_API_URL
 
 const api = axios.create({
   baseURL: API_URL,
@@ -14,7 +14,7 @@ export const createTask = async (task: { title: string; description: string }) =
   try {
     const ipAddress = await getIpAddress()
 
-    const response = await api.post('tasks', task, {
+    const response = await api.post('/tasks', task, {
       params: {
         ipAddress,
       },
@@ -68,7 +68,7 @@ export const deleteTask = async (id: string) => {
   try {
     const ipAddress = await getIpAddress()
 
-    const response = await api.delete(`tasks/${id}`, {
+    const response = await api.delete(`/tasks/${id}`, {
       params: {
         ipAddress,
       },
